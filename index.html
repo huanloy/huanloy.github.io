@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>520 ❤️ 致我最爱的你</title>
+    <title>520 ❤️ 致我最爱的宝宝</title>
     <style>
         * {
             margin: 0;
@@ -30,7 +30,7 @@
             height: 100%;
             display: block;
             z-index: 1;
-            cursor: crosshair;
+            cursor: pointer;
         }
 
         /* 内容层 - 文字卡片等 */
@@ -177,16 +177,17 @@
 </head>
 <body>
 
-<canvas id="heartCanvas"></canvas>
-
-<div class="content">
+<!-- <canvas id="heartCanvas"></canvas> -->
+<canvas id="heartCanvas" style="z-index:1;"></canvas>
+<canvas id="fxCanvas" style="position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:3;"></canvas>
+<div class="content" style="z-index:2;">
     <div class="love-card">
         <div class="greeting">❤️ 520 ❤️</div>
-        <div class="name">✨ 致 我最爱的宝贝 ✨</div>
+        <div class="name">✨ 致 我最爱的宝宝 ✨</div>
         <div class="message">「 你是我藏在心底的浪漫，也是我每个日夜的想念 」</div>
         
         <div class="countdown-box">
-            <div class="countdown-title">💗 距离我们的专属节日还有 💗</div>
+            <div class="countdown-title">和宝宝在一起</div>
             <div class="timer" id="countdownTimer">加载中...</div>
         </div>
         
@@ -196,6 +197,9 @@
         <button class="btn-music" id="magicButton">✨ 点我收获爱心雨 ✨</button>
         <!-- 音乐播放器隐藏但控制用 -->
         <audio id="bgMusic" loop preload="none" style="display:none;"></audio>
+        <!-- <div> -->
+            <!-- <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=298 height=52 src="https://music.163.com/outchain/player?type=2&id=1299981609&auto=1&height=32" allow="autoplay"></iframe> -->
+        <!-- </div> -->
     </div>
     <div class="footer-tip">✨ 点击任意处 · 爱心随行 | 鼠标靠近 · 粒子轻舞 ✨</div>
 </div>
@@ -580,23 +584,52 @@
         }
         
         // ---------- 倒计时 (下一个5月20日) ----------
+        // function updateCountdown() {
+        //     const timerDiv = document.getElementById('countdownTimer');
+        //     if(!timerDiv) return;
+        //     const now = new Date();
+        //     let currentYear = now.getFullYear();
+        //     let may20 = new Date(currentYear, 4, 20, 0, 0, 0); // 5月20日
+        //     if (now > may20) {
+        //         may20 = new Date(currentYear + 1, 4, 20, 0, 0, 0);
+        //     }
+        //     const diff = may20 - now;
+        //     if (diff <= 0) {
+        //         timerDiv.innerHTML = "🎉 今天就是520！我爱你！🎉";
+        //         document.querySelector('.greeting').innerHTML = "💕 520 快乐 !! 💕";
+        //         const msg = document.getElementById('dynamicBlessing');
+        //         if(msg) msg.innerHTML = "✨ 今天，是世界上最好的节日！因为你在我身边 ✨";
+        //         return;
+        //     }
+        //     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        //     const hours = Math.floor((diff % (86400000)) / (3600000));
+        //     const minutes = Math.floor((diff % 3600000) / 60000);
+        //     const seconds = Math.floor((diff % 60000) / 1000);
+        //     timerDiv.innerHTML = `${days}天 ${hours.toString().padStart(2,'0')}时 ${minutes.toString().padStart(2,'0')}分 ${seconds.toString().padStart(2,'0')}秒`;
+        //     setTimeout(updateCountdown, 1000);
+        // }
+        // 正计时
+        const firstMillSeconds = 1776964040000;
         function updateCountdown() {
+
             const timerDiv = document.getElementById('countdownTimer');
             if(!timerDiv) return;
-            const now = new Date();
-            let currentYear = now.getFullYear();
-            let may20 = new Date(currentYear, 4, 20, 0, 0, 0); // 5月20日
-            if (now > may20) {
-                may20 = new Date(currentYear + 1, 4, 20, 0, 0, 0);
-            }
-            const diff = may20 - now;
-            if (diff <= 0) {
-                timerDiv.innerHTML = "🎉 今天就是520！我爱你！🎉";
-                document.querySelector('.greeting').innerHTML = "💕 520 快乐 !! 💕";
-                const msg = document.getElementById('dynamicBlessing');
-                if(msg) msg.innerHTML = "✨ 今天，是世界上最好的节日！因为你在我身边 ✨";
-                return;
-            }
+            // const now = new Date();
+            // let currentYear = now.getFullYear();
+            // let may20 = new Date(currentYear, 4, 20, 0, 0, 0); // 5月20日
+            // if (now > may20) {
+            //     may20 = new Date(currentYear + 1, 4, 20, 0, 0, 0);
+            // }
+            // const diff = may20 - now;
+            // if (diff <= 0) {
+            //     timerDiv.innerHTML = "🎉 今天就是520！我爱你！🎉";
+            //     document.querySelector('.greeting').innerHTML = "💕 520 快乐 !! 💕";
+            //     const msg = document.getElementById('dynamicBlessing');
+            //     if(msg) msg.innerHTML = "✨ 今天，是世界上最好的节日！因为你在我身边 ✨";
+            //     return;
+            // }
+            const now = Date.now();
+            const diff = now - firstMillSeconds;
             const days = Math.floor(diff / (1000 * 60 * 60 * 24));
             const hours = Math.floor((diff % (86400000)) / (3600000));
             const minutes = Math.floor((diff % 3600000) / 60000);
@@ -604,7 +637,6 @@
             timerDiv.innerHTML = `${days}天 ${hours.toString().padStart(2,'0')}时 ${minutes.toString().padStart(2,'0')}分 ${seconds.toString().padStart(2,'0')}秒`;
             setTimeout(updateCountdown, 1000);
         }
-        
         // 浪漫文字轮换 (小彩蛋)
         let blessings = [
             "🌹 你是我的半圆，拼起来就是整个宇宙 🌹",
@@ -644,10 +676,10 @@
         function initMusic() {
             const audio = document.getElementById('bgMusic');
             // 使用免费可播放的轻音乐片源 (浪漫钢琴曲，可靠资源)
-            audio.src = 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3';
+            audio.src = 'https://m801.music.126.net/20260520153421/089ff869e841c5032acfaaaab44b7881/jdymusic/obj/wo3DlMOGwrbDjj7DisKw/22259918447/7172/de53/6307/ee6507f294bb25d9608f0be500270893.mp3?vuutv=7uW8Huv0eg+rD6tZFrHcTSRIkkg6Z2VM6faeDl3KOZbLKH6kZhP4s4PnFcLF9nQFprcSQ+B9yDMDI4XyW9+6oIkmi9mzk+85scJbB6Csnmi2SWN0mHvWDf0Xsvqy4tvH&cdntag=bWFyaz1vc193ZWIscXVhbGl0eV9zdGFuZGFyZA';
             audio.volume = 0.35;
             const btn = document.querySelector('.btn-music');
-            btn.innerHTML = '🎵 播放浪漫旋律 🎵';
+            btn.innerHTML = '⏯️ River Flows in You 🎵';
             let isPlaying = false;
             btn.addEventListener('click', (e) => {
                 e.stopPropagation();
@@ -655,20 +687,20 @@
                     audio.play().then(() => {
                         musicAllowed = true;
                         isPlaying = true;
-                        btn.innerHTML = '🎶 音乐播放中 🎶';
+                        // btn.innerHTML = '🎶 音乐播放中 🎶';
                     }).catch(() => {
-                        btn.innerHTML = '🔊 点击播放 (需交互)';
+                        // btn.innerHTML = '🔊 点击播放 (需交互)';
                         musicAllowed = false;
                     });
                 } else {
                     if(isPlaying) {
                         audio.pause();
                         isPlaying = false;
-                        btn.innerHTML = '🎵 播放浪漫旋律 🎵';
+                        // btn.innerHTML = '🎵 播放浪漫旋律 🎵';
                     } else {
                         audio.play();
                         isPlaying = true;
-                        btn.innerHTML = '🎶 音乐播放中 🎶';
+                        // btn.innerHTML = '🎶 音乐播放中 🎶';
                     }
                 }
             });
@@ -678,7 +710,7 @@
                     audio.play().then(() => {
                         musicAllowed = true;
                         isPlaying = true;
-                        if(btn) btn.innerHTML = '🎶 音乐播放中 🎶';
+                        // if(btn) btn.innerHTML = '🎶 音乐播放中 🎶';
                     }).catch(()=>{});
                 }
             }, {once: true});
