@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>520 ❤️ 致我最爱的你</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none; /* 避免拖动文字，保持美观 */
+        }
+
+        body {
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            background: radial-gradient(circle at center, #2b0b1a, #1a0a12);
+            font-family: 'Dancing Script', '华文行书', 'Segoe UI', 'PingFang SC', Roboto, 'Helvetica Neue', cursive;
+            position: relative;
+        }
+
+        /* Canvas 背景层（粒子爱心） */
+        #heartCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+            z-index: 1;
+            cursor: crosshair;
+        }
+
+        /* 内容层 - 文字卡片等 */
+        .content {
+            position: absolute;
+            z-index: 2;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            pointer-events: none;  /* 让文字不干扰点击canvas的交互，但内部按钮需要单独恢复 */
+        }
+
+        /* 浪漫主卡片 */
+        .love-card {
+            background: rgba(0, 0, 0, 0.55);
+            backdrop-filter: blur(8px);
+            border-radius: 48px;
+            padding: 20px 32px;
+            text-align: center;
+            border: 1px solid rgba(255, 120, 160, 0.6);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 30px rgba(255, 80, 120, 0.4);
+            animation: gentleFloat 3s ease-in-out infinite;
+            pointer-events: auto;
+            max-width: 85%;
+            width: 550px;
+            transition: all 0.3s ease;
+        }
+
+        @keyframes gentleFloat {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .greeting {
+            font-size: 3.8rem;
+            font-weight: bold;
+            color: #ffb7c5;
+            text-shadow: 0 0 8px #ff4070, 0 0 15px #ff2e6b;
+            letter-spacing: 4px;
+            margin-bottom: 8px;
+        }
+
+        .name {
+            font-size: 2.4rem;
+            background: linear-gradient(135deg, #FFB7C5, #FF6F91);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(255, 105, 180, 0.5);
+            margin: 10px 0;
+        }
+
+        .message {
+            font-size: 1.2rem;
+            color: #ffe3e8;
+            margin: 15px 0 8px;
+            line-height: 1.5;
+            font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+            font-weight: 500;
+        }
+
+        .countdown-box {
+            background: rgba(255, 200, 210, 0.2);
+            border-radius: 60px;
+            padding: 12px 20px;
+            margin: 18px 0;
+            display: inline-block;
+            backdrop-filter: blur(4px);
+        }
+
+        .countdown-title {
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            color: #ffb7c5;
+        }
+
+        .timer {
+            font-size: 1.8rem;
+            font-weight: bold;
+            font-family: monospace;
+            color: #FFE3E8;
+            text-shadow: 0 0 5px #ff4d6d;
+        }
+
+        .sweet-words {
+            font-size: 1rem;
+            margin: 16px 0 8px;
+            color: #ffcfda;
+            border-top: 1px dashed #ff8aa9;
+            padding-top: 12px;
+        }
+
+        .btn-music {
+            background: #ff4d6d;
+            border: none;
+            color: white;
+            font-size: 0.9rem;
+            padding: 6px 18px;
+            border-radius: 40px;
+            margin-top: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+            font-weight: bold;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            pointer-events: auto;
+        }
+
+        .btn-music:hover {
+            background: #ff1e4d;
+            transform: scale(1.02);
+            box-shadow: 0 0 12px #ff4d6d;
+        }
+
+        .footer-tip {
+            position: absolute;
+            bottom: 18px;
+            font-size: 0.7rem;
+            color: rgba(255, 200, 220, 0.6);
+            background: rgba(0,0,0,0.3);
+            padding: 4px 12px;
+            border-radius: 20px;
+            pointer-events: none;
+            z-index: 2;
+            font-family: monospace;
+        }
+
+        /* 移动端适配 */
+        @media (max-width: 650px) {
+            .greeting { font-size: 2.4rem; }
+            .name { font-size: 1.8rem; }
+            .message { font-size: 0.9rem; }
+            .timer { font-size: 1.3rem; }
+            .love-card { padding: 16px 22px; width: 90%; }
+        }
+    </style>
+    <!-- Google Font 优雅字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<canvas id="heartCanvas"></canvas>
+
+<div class="content">
+    <div class="love-card">
+        <div class="greeting">❤️ 520 ❤️</div>
+        <div class="name">✨ 致 我最爱的宝贝 ✨</div>
+        <div class="message">「 你是我藏在心底的浪漫，也是我每个日夜的想念 」</div>
+        
+        <div class="countdown-box">
+            <div class="countdown-title">💗 距离我们的专属节日还有 💗</div>
+            <div class="timer" id="countdownTimer">加载中...</div>
+        </div>
+        
+        <div class="sweet-words" id="dynamicBlessing">
+            🌹 与你在一起的日子，每天都值得纪念 🌹
+        </div>
+        <button class="btn-music" id="magicButton">✨ 点我收获爱心雨 ✨</button>
+        <!-- 音乐播放器隐藏但控制用 -->
+        <audio id="bgMusic" loop preload="none" style="display:none;"></audio>
+    </div>
+    <div class="footer-tip">✨ 点击任意处 · 爱心随行 | 鼠标靠近 · 粒子轻舞 ✨</div>
+</div>
+
+<script>
+    (function(){
+        // ------------------------------- 浪漫粒子爱心系统 ---------------------------------
+        const canvas = document.getElementById('heartCanvas');
+        let ctx = canvas.getContext('2d');
+        
+        let width, height;
+        let particles = [];          // 主粒子群（组成爱心）
+        let floatingHearts = [];     // 点击特效粒子（漂浮小爱心）
+        let mouseX = -1000, mouseY = -1000;
+        let mousePresent = false;
+        
+        // 爱心参数方程参数 (经典心脏曲线)
+        // x = 16 * sin(t)^3 , y = 13cos(t) - 5 cos(2t) - 2cos(3t) - cos(4t)
+        // 缩放 & 平移全局变量
+        let scaleVal = 1;
+        let offsetX, offsetY;
+        
+        // 粒子总数 (尽量优雅兼顾性能)
+        const MAIN_PARTICLE_COUNT = 420;
+        // 辅助随机偏移范围 (让爱心有蓬松感)
+        const OFFSET_RADIUS = 11;
+        
+        // 存储爱心曲线上的基准点（轮廓+内部扩充采样点，让爱心丰满）
+        let heartPoints = [];   // 存储每个粒子的目标基准位置 {baseX, baseY}
+        
+        // 生成爱心轮廓及内部填充点
+        function generateHeartPoints(count) {
+            let points = [];
+            // 经典参数t步长
+            const steps = Math.floor(count * 0.7);  // 70%轮廓点
+            for (let i = 0; i < steps; i++) {
+                let t = (i / steps) * Math.PI * 2;
+                let xRaw = 16 * Math.pow(Math.sin(t), 3);
+                let yRaw = 13 * Math.cos(t) - 5 * Math.cos(2*t) - 2*Math.cos(3*t) - Math.cos(4*t);
+                points.push({ xRaw, yRaw, type: 'contour' });
+            }
+            // 内部填充点: 在爱心内部随机生成更多的点，使爱心饱满 (通过缩小范围采样)
+            let fillNeeded = count - points.length;
+            for (let i = 0; i < fillNeeded; i++) {
+                // 随机角度 t
+                let t = Math.random() * Math.PI * 2;
+                let xRaw = 16 * Math.pow(Math.sin(t), 3);
+                let yRaw = 13 * Math.cos(t) - 5 * Math.cos(2*t) - 2*Math.cos(3*t) - Math.cos(4*t);
+                // 向内收缩 0.3~0.8 倍率，模拟内部填充
+                let shrink = 0.4 + Math.random() * 0.5;
+                xRaw = xRaw * shrink;
+                yRaw = yRaw * shrink;
+                points.push({ xRaw, yRaw, type: 'inner' });
+            }
+            // 随机打乱顺序，让粒子分布更自然
+            for (let i = points.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [points[i], points[j]] = [points[j], points[i]];
+            }
+            return points.slice(0, count);
+        }
+        
+        // 更新爱心缩放和偏移 (依据canvas尺寸)
+        function updateHeartTransform() {
+            // 爱心原始宽度大约 32 (从-16 到 16) 高度范围大约从 -16 到 13+? 实际 y 范围 [-16, 17] 左右
+            // 留出边距 15%
+            let heartWidth = 32;
+            let heartHeight = 30;
+            let padding = 0.8;
+            scaleVal = Math.min(width / heartWidth, height / heartHeight) * 0.85;
+            offsetX = width / 2;
+            offsetY = height / 2 - 5;  // 轻微上移更优雅
+        }
+        
+        // 将原始爱心坐标映射到屏幕坐标
+        function mapHeartPoint(rawX, rawY) {
+            let screenX = offsetX + rawX * scaleVal;
+            let screenY = offsetY - rawY * scaleVal; // y轴翻转
+            return { x: screenX, y: screenY };
+        }
+        
+        // 生成粒子系统
+        function initParticles() {
+            const heartRawPoints = generateHeartPoints(MAIN_PARTICLE_COUNT);
+            // 预先存储每个粒子的基准目标位置（带有随机偏移，使爱心蓬松）
+            heartPoints = heartRawPoints.map(p => {
+                let basePos = { x: p.xRaw, y: p.yRaw };
+                // 随机偏移量，使爱心形态更有光晕蓬松感
+                let angleOff = Math.random() * Math.PI * 2;
+                let radOff = Math.random() * OFFSET_RADIUS * 0.8;
+                let offX = Math.cos(angleOff) * radOff;
+                let offY = Math.sin(angleOff) * radOff;
+                return { baseX: p.xRaw + offX, baseY: p.yRaw + offY, type: p.type };
+            });
+            
+            // 建立粒子数组
+            for (let i = 0; i < MAIN_PARTICLE_COUNT; i++) {
+                const hp = heartPoints[i];
+                // 先计算屏幕基准目标位置
+                let screenTarget = mapHeartPoint(hp.baseX, hp.baseY);
+                // 初始随机位置 (从画面外围慢慢飘入，更好看)
+                let startX = width * (0.3 + Math.random() * 0.4);
+                let startY = height * (0.2 + Math.random() * 0.6);
+                if (Math.random() > 0.5) startX = Math.random() * width;
+                if (Math.random() > 0.5) startY = Math.random() * height;
+                
+                particles.push({
+                    x: startX,
+                    y: startY,
+                    targetX: screenTarget.x,
+                    targetY: screenTarget.y,
+                    vx: (Math.random() - 0.5) * 1.2,
+                    vy: (Math.random() - 0.5) * 1.2,
+                    radius: 2 + Math.random() * 3.2,
+                    color: `hsl(${340 + Math.random() * 30}, 85%, 65%)`,
+                    alpha: 0.7 + Math.random() * 0.3,
+                    wobble: Math.random() * Math.PI * 2,
+                    wobbleSpeed: 0.5 + Math.random() * 1.5,
+                    // 存储个人偏移震动幅度
+                    personalOffsetX: 0,
+                    personalOffsetY: 0,
+                });
+            }
+        }
+        
+        // 重新计算所有粒子的目标位置（窗口resize时刷新）
+        function refreshTargetPositions() {
+            if(!heartPoints.length) return;
+            updateHeartTransform();
+            for (let i = 0; i < particles.length; i++) {
+                const hp = heartPoints[i % heartPoints.length];
+                let screenTarget = mapHeartPoint(hp.baseX, hp.baseY);
+                particles[i].targetX = screenTarget.x;
+                particles[i].targetY = screenTarget.y;
+            }
+        }
+        
+        // 鼠标交互：产生斥力/轻微偏移 (粒子避开鼠标，灵动感)
+        function applyMouseForce(p) {
+            if (!mousePresent) return;
+            const dx = p.x - mouseX;
+            const dy = p.y - mouseY;
+            const dist = Math.hypot(dx, dy);
+            const repelRadius = 65;
+            if (dist < repelRadius && dist > 0.1) {
+                const force = (repelRadius - dist) / repelRadius * 2.2;
+                const angle = Math.atan2(dy, dx);
+                const fx = Math.cos(angle) * force;
+                const fy = Math.sin(angle) * force;
+                p.vx += fx;
+                p.vy += fy;
+                // 限制最大速度
+                let maxSpeed = 4;
+                if (Math.abs(p.vx) > maxSpeed) p.vx = p.vx > 0 ? maxSpeed : -maxSpeed;
+                if (Math.abs(p.vy) > maxSpeed) p.vy = p.vy > 0 ? maxSpeed : -maxSpeed;
+            }
+        }
+        
+        // 更新粒子运动：向目标位置靠拢 + 动态小摆动 + 鼠标力
+        function updateParticles() {
+            for (let p of particles) {
+                // 向目标位置移动 (弹性缓动)
+                let dxTarget = p.targetX - p.x;
+                let dyTarget = p.targetY - p.y;
+                // 平滑归位系数
+                let ease = 0.045;
+                p.vx += dxTarget * ease;
+                p.vy += dyTarget * ease;
+                
+                // 添加一点随机微颤 (浪漫心跳感)
+                p.wobble += p.wobbleSpeed * 0.02;
+                let wiggleX = Math.sin(p.wobble) * 0.5;
+                let wiggleY = Math.cos(p.wobble * 1.3) * 0.4;
+                
+                // 鼠标排斥力影响速度
+                applyMouseForce(p);
+                
+                // 阻尼
+                p.vx *= 0.94;
+                p.vy *= 0.94;
+                p.x += p.vx + wiggleX * 0.25;
+                p.y += p.vy + wiggleY * 0.25;
+                
+                // 边界保护 (不超出画布太远)
+                p.x = Math.min(width + 60, Math.max(-60, p.x));
+                p.y = Math.min(height + 60, Math.max(-60, p.y));
+            }
+        }
+        
+        // 绘制粒子 (光晕效果)
+        function drawParticles() {
+            for (let p of particles) {
+                ctx.beginPath();
+                // 动态光泽
+                let gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.radius * 1.5);
+                gradient.addColorStop(0, `rgba(255, 100, 130, 0.9)`);
+                gradient.addColorStop(1, `rgba(255, 60, 100, 0.3)`);
+                ctx.fillStyle = gradient;
+                ctx.arc(p.x, p.y, p.radius * 0.9, 0, Math.PI * 2);
+                ctx.fill();
+                // 增加高光小点
+                ctx.beginPath();
+                ctx.fillStyle = `rgba(255, 220, 230, 0.8)`;
+                ctx.arc(p.x - p.radius*0.2, p.y - p.radius*0.2, p.radius*0.25, 0, Math.PI*2);
+                ctx.fill();
+            }
+        }
+        
+        // 画漂浮爱心特效 (点击产生)
+        class FloatingHeart {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.vx = (Math.random() - 0.5) * 2.2;
+                this.vy = -1.5 - Math.random() * 2.5;
+                this.size = 8 + Math.random() * 12;
+                this.life = 1.0;
+                this.decay = 0.018 + Math.random() * 0.015;
+                this.angle = Math.random() * Math.PI * 2;
+                this.rotSpeed = (Math.random() - 0.5) * 0.1;
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                this.vy += 0.1;    // 重力
+                this.life -= this.decay;
+                this.angle += this.rotSpeed;
+                return this.life > 0;
+            }
+            draw(ctx) {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.angle);
+                ctx.shadowBlur = 8;
+                ctx.shadowColor = "#ff4d6d";
+                ctx.beginPath();
+                // 画简易爱心形状 (两个圆弧)
+                const s = this.size / 10;
+                ctx.scale(s, s);
+                ctx.moveTo(0, -3);
+                ctx.bezierCurveTo(-2, -6, -6, -2, 0, 3);
+                ctx.bezierCurveTo(6, -2, 2, -6, 0, -3);
+                ctx.fillStyle = `rgba(255, 80, 120, ${this.life * 0.9})`;
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+        
+        // 添加点击爱心特效 (随机多个)
+        function addHeartExplosion(clickX, clickY) {
+            let count = 14 + Math.floor(Math.random() * 12);
+            for (let i = 0; i < count; i++) {
+                let angleVar = Math.random() * Math.PI * 2;
+                let rad = 5 + Math.random() * 12;
+                let xOff = Math.cos(angleVar) * rad;
+                let yOff = Math.sin(angleVar) * rad;
+                let heart = new FloatingHeart(clickX + xOff, clickY + yOff);
+                heart.vx += (Math.random() - 0.5) * 3;
+                heart.vy -= Math.random() * 2.5;
+                floatingHearts.push(heart);
+            }
+        }
+        
+        // 更新所有漂浮爱心
+        function updateFloatingHearts() {
+            for (let i = floatingHearts.length-1; i >= 0; i--) {
+                let alive = floatingHearts[i].update();
+                if (!alive) floatingHearts.splice(i,1);
+            }
+        }
+        
+        function drawFloatingHearts() {
+            for (let heart of floatingHearts) {
+                heart.draw(ctx);
+            }
+        }
+        
+        // 画背景星星闪烁粒子
+        let stars = [];
+        function initStars() {
+            for(let i=0;i<150;i++) {
+                stars.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    radius: Math.random() * 2,
+                    alpha: Math.random() * 0.6,
+                    twinkle: Math.random() * 0.05 + 0.02
+                });
+            }
+        }
+        function drawStars() {
+            for(let s of stars) {
+                ctx.beginPath();
+                ctx.fillStyle = `rgba(255, 210, 220, ${s.alpha + Math.sin(Date.now() * s.twinkle) * 0.2})`;
+                ctx.arc(s.x, s.y, s.radius, 0, Math.PI*2);
+                ctx.fill();
+            }
+        }
+        function resizeStars() {
+            stars = [];
+            initStars();
+        }
+        
+        // 全局动画、鼠标监听、窗口适配
+        let animationId;
+        
+        function animate() {
+            if (!ctx) return;
+            ctx.clearRect(0, 0, width, height);
+            // 绘制闪烁星空背景
+            drawStars();
+            // 绘制主粒子爱心
+            drawParticles();
+            // 绘制漂浮爱心特效
+            drawFloatingHearts();
+            // 添加光晕整体感: 在爱心中心绘制柔光
+            ctx.save();
+            ctx.shadowBlur = 0;
+            ctx.globalCompositeOperation = 'lighter';
+            updateParticles();
+            updateFloatingHearts();
+            ctx.restore();
+            
+            animationId = requestAnimationFrame(animate);
+        }
+        
+        // 监听鼠标位置
+        function initMouseEffect() {
+            window.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+                mousePresent = true;
+            });
+            window.addEventListener('mouseleave', () => {
+                mousePresent = false;
+            });
+            // 移动端触摸支持
+            window.addEventListener('touchmove', (e) => {
+                if(e.touches.length) {
+                    mouseX = e.touches[0].clientX;
+                    mouseY = e.touches[0].clientY;
+                    mousePresent = true;
+                }
+            });
+            window.addEventListener('touchend', () => {
+                mousePresent = false;
+            });
+        }
+        
+        // 添加canvas点击特效 + 额外弹爱心
+        function addClickEffect() {
+            canvas.addEventListener('click', (e) => {
+                let clickX = e.clientX;
+                let clickY = e.clientY;
+                addHeartExplosion(clickX, clickY);
+                // 临时加强文字祝福闪烁感
+                const blessEl = document.getElementById('dynamicBlessing');
+                if(blessEl) {
+                    blessEl.style.transform = 'scale(1.05)';
+                    blessEl.style.transition = '0.2s';
+                    setTimeout(() => { blessEl.style.transform = ''; }, 300);
+                }
+                // 震动一下卡片
+                const card = document.querySelector('.love-card');
+                if(card) card.style.transform = 'scale(1.01)';
+                setTimeout(() => { if(card) card.style.transform = ''; }, 150);
+            });
+            // 同样让魔法按钮也触发特效
+            const magicBtn = document.getElementById('magicButton');
+            if(magicBtn) {
+                magicBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    let rect = canvas.getBoundingClientRect();
+                    let x = rect.width/2;
+                    let y = rect.height/2;
+                    if (mousePresent && mouseX>0) { x = mouseX; y = mouseY; }
+                    else { x = window.innerWidth/2; y = window.innerHeight/2; }
+                    addHeartExplosion(x, y);
+                    for(let i=0;i<8;i++) setTimeout(()=> addHeartExplosion(x+ (Math.random()-0.5)*40, y+(Math.random()-0.5)*40), i*50);
+                });
+            }
+        }
+        
+        // ---------- 倒计时 (下一个5月20日) ----------
+        function updateCountdown() {
+            const timerDiv = document.getElementById('countdownTimer');
+            if(!timerDiv) return;
+            const now = new Date();
+            let currentYear = now.getFullYear();
+            let may20 = new Date(currentYear, 4, 20, 0, 0, 0); // 5月20日
+            if (now > may20) {
+                may20 = new Date(currentYear + 1, 4, 20, 0, 0, 0);
+            }
+            const diff = may20 - now;
+            if (diff <= 0) {
+                timerDiv.innerHTML = "🎉 今天就是520！我爱你！🎉";
+                document.querySelector('.greeting').innerHTML = "💕 520 快乐 !! 💕";
+                const msg = document.getElementById('dynamicBlessing');
+                if(msg) msg.innerHTML = "✨ 今天，是世界上最好的节日！因为你在我身边 ✨";
+                return;
+            }
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (86400000)) / (3600000));
+            const minutes = Math.floor((diff % 3600000) / 60000);
+            const seconds = Math.floor((diff % 60000) / 1000);
+            timerDiv.innerHTML = `${days}天 ${hours.toString().padStart(2,'0')}时 ${minutes.toString().padStart(2,'0')}分 ${seconds.toString().padStart(2,'0')}秒`;
+            setTimeout(updateCountdown, 1000);
+        }
+        
+        // 浪漫文字轮换 (小彩蛋)
+        let blessings = [
+            "🌹 你是我的半圆，拼起来就是整个宇宙 🌹",
+            "💖 遇见你，是所有浪漫故事的起点 💖",
+            "🌸 把星星熬成糖浆，涂在你心口上 🌸",
+            "✨ 你的微笑是我每天的阳光 ✨",
+            "💕 想和你一起，从清晨到日暮，从心动到古稀 💕"
+        ];
+        let idx = 0;
+        function rotateBlessing() {
+            const ele = document.getElementById('dynamicBlessing');
+            if(ele) {
+                idx = (idx+1) % blessings.length;
+                ele.style.opacity = '0.7';
+                setTimeout(() => { if(ele) ele.style.opacity = '1'; }, 300);
+                ele.innerHTML = `🌺 ${blessings[idx]} 🌺`;
+            }
+            setTimeout(rotateBlessing, 7000);
+        }
+        
+        // resize 适配
+        function resizeCanvas() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+            if(ctx) {
+                ctx.shadowBlur = 0;
+            }
+            updateHeartTransform();
+            refreshTargetPositions();
+            resizeStars();
+        }
+        
+        // 初始化音乐模块 (由于自动播放策略，需用户交互，所以我们延迟绑定手势)
+        let musicAllowed = false;
+        function initMusic() {
+            const audio = document.getElementById('bgMusic');
+            // 使用免费可播放的轻音乐片源 (浪漫钢琴曲，可靠资源)
+            audio.src = 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3';
+            audio.volume = 0.35;
+            const btn = document.querySelector('.btn-music');
+            btn.innerHTML = '🎵 播放浪漫旋律 🎵';
+            let isPlaying = false;
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if(!musicAllowed) {
+                    audio.play().then(() => {
+                        musicAllowed = true;
+                        isPlaying = true;
+                        btn.innerHTML = '🎶 音乐播放中 🎶';
+                    }).catch(() => {
+                        btn.innerHTML = '🔊 点击播放 (需交互)';
+                        musicAllowed = false;
+                    });
+                } else {
+                    if(isPlaying) {
+                        audio.pause();
+                        isPlaying = false;
+                        btn.innerHTML = '🎵 播放浪漫旋律 🎵';
+                    } else {
+                        audio.play();
+                        isPlaying = true;
+                        btn.innerHTML = '🎶 音乐播放中 🎶';
+                    }
+                }
+            });
+            // 点击canvas任何地方如果尚未播放音乐也可悄悄允许播放? 为了策略，第一次点击canvas尝试播放
+            canvas.addEventListener('click', function tryPlayOnce() {
+                if(!musicAllowed) {
+                    audio.play().then(() => {
+                        musicAllowed = true;
+                        isPlaying = true;
+                        if(btn) btn.innerHTML = '🎶 音乐播放中 🎶';
+                    }).catch(()=>{});
+                }
+            }, {once: true});
+        }
+        
+        // 运行所有
+        function start() {
+            resizeCanvas();
+            initParticles();
+            initStars();
+            initMouseEffect();
+            addClickEffect();
+            updateCountdown();
+            rotateBlessing();
+            initMusic();
+            animate();
+            window.addEventListener('resize', () => {
+                resizeCanvas();
+                refreshTargetPositions();
+            });
+        }
+        
+        start();
+    })();
+</script>
+</body>
+</html>
