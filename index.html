@@ -10,6 +10,7 @@
             padding: 0;
             box-sizing: border-box;
             user-select: none; /* 避免拖动文字，保持美观 */
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -107,7 +108,7 @@
         }
 
         .countdown-title {
-            font-size: 0.9rem;
+            font-size: 1.2rem;
             letter-spacing: 2px;
             color: #ffb7c5;
         }
@@ -183,14 +184,15 @@
 <div class="content" style="z-index:2;">
     <div class="love-card">
         <div class="greeting">❤️ 520 ❤️</div>
-        <div class="name">✨ 致 我最爱的宝宝 ✨</div>
-        <div class="message">「 你是我藏在心底的浪漫，也是我每个日夜的想念 」</div>
+        <div class="name">✨ 我最爱的宝宝 ✨</div>
         
         <div class="countdown-box">
             <div class="countdown-title">和宝宝在一起</div>
             <div class="timer" id="countdownTimer">加载中...</div>
         </div>
         
+        <div class="message">「 你是我藏在心底的浪漫，也是我每个日夜的想念 」</div>
+
         <div class="sweet-words" id="dynamicBlessing">
             🌹 与你在一起的日子，每天都值得纪念 🌹
         </div>
@@ -201,7 +203,7 @@
             <!-- <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=298 height=52 src="https://music.163.com/outchain/player?type=2&id=1299981609&auto=1&height=32" allow="autoplay"></iframe> -->
         <!-- </div> -->
     </div>
-    <div class="footer-tip">✨ 点击任意处 · 爱心随行 | 鼠标靠近 · 粒子轻舞 ✨</div>
+    <!-- <div class="footer-tip">✨ 点击任意处 · 爱心随行 | 鼠标靠近 · 粒子轻舞 ✨</div> -->
 </div>
 
 <script>
@@ -639,11 +641,11 @@
         }
         // 浪漫文字轮换 (小彩蛋)
         let blessings = [
-            "🌹 你是我的半圆，拼起来就是整个宇宙 🌹",
-            "💖 遇见你，是所有浪漫故事的起点 💖",
-            "🌸 把星星熬成糖浆，涂在你心口上 🌸",
-            "✨ 你的微笑是我每天的阳光 ✨",
-            "💕 想和你一起，从清晨到日暮，从心动到古稀 💕"
+            "🍀 遇见宝，是我最幸运的事 🍀",
+            "💖 爱上宝，是我最开心的事 💖",
+            "✨ 拥有宝，是我最知足的事 ✨",
+            "💎 珍惜宝，是我最坚定的事 💎",
+            "🎀 守护宝，是我最想做的事 🎀",
         ];
         let idx = 0;
         function rotateBlessing() {
@@ -652,9 +654,9 @@
                 idx = (idx+1) % blessings.length;
                 ele.style.opacity = '0.7';
                 setTimeout(() => { if(ele) ele.style.opacity = '1'; }, 300);
-                ele.innerHTML = `🌺 ${blessings[idx]} 🌺`;
+                ele.innerHTML = `${blessings[idx]}`;
             }
-            setTimeout(rotateBlessing, 7000);
+            setTimeout(rotateBlessing, 4000);
         }
         
         // resize 适配
@@ -676,7 +678,8 @@
         function initMusic() {
             const audio = document.getElementById('bgMusic');
             // 使用免费可播放的轻音乐片源 (浪漫钢琴曲，可靠资源)
-            audio.src = 'https://m801.music.126.net/20260520153421/089ff869e841c5032acfaaaab44b7881/jdymusic/obj/wo3DlMOGwrbDjj7DisKw/22259918447/7172/de53/6307/ee6507f294bb25d9608f0be500270893.mp3?vuutv=7uW8Huv0eg+rD6tZFrHcTSRIkkg6Z2VM6faeDl3KOZbLKH6kZhP4s4PnFcLF9nQFprcSQ+B9yDMDI4XyW9+6oIkmi9mzk+85scJbB6Csnmi2SWN0mHvWDf0Xsvqy4tvH&cdntag=bWFyaz1vc193ZWIscXVhbGl0eV9zdGFuZGFyZA';
+            audio.src = 'https://huanloy.github.io/huanloy/river.mp3';
+            // audio.src = 'README.md';
             audio.volume = 0.35;
             const btn = document.querySelector('.btn-music');
             btn.innerHTML = '⏯️ River Flows in You 🎵';
